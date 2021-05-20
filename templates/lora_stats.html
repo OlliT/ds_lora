@@ -14,7 +14,17 @@
     </script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js">
     </script>
-    <title>Lora 1-day stats</title>
+    <title>Lora stats</title>
+    <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 5px;
+      text-align: left;
+    }
+</style>
 </head>
 <body>
   <div class="container">
@@ -25,18 +35,50 @@
     </div>
   </div>
 
-  <div id="stat_table">
+<p id="stat_table">
     <table>
   <tr>
-    <th>Average PM2.5:</th>
+    <th>12h Average PM2.5:</th>
     <td id="avg"></td>
   </tr>
   <tr>
-    <th>Peak PM2.5 value:</th>
+    <th>12h Peak PM2.5 value:</th>
     <td id="peak"></td>
   </tr>
 </table>
-</div>
+</p>
+
+<p id="color_key">
+  <table>
+  <tr>
+    <th>PM2.5 value</th>
+    <th>Health Concern</th>
+  </tr>
+  <tr>
+    <td>0 - 15</td>
+    <td> Good </td>
+  </tr>
+  <tr>
+    <td> 15 - 40 </td>
+    <td> Moderate </td>
+  </tr>
+  <tr>
+    <td> 40 - 65 </td>
+    <td> Unhealthy for sensitive groups </td>
+  </tr>
+  <tr>
+    <td> 65 - 150 </td>
+    <td> Unhealthy </td>
+  </tr>
+  <tr>
+    <td> 150 - 250 </td>
+    <td> Very Unhealthy </td>
+  </tr>
+  <tr>
+    <td> 250 - 500 </td>
+    <td> Hazarduous </td>
+  </tr>
+</table>
 
 </body>
 
@@ -98,6 +140,12 @@ var graphData = {
              }
          }]
         },
+        plugins: {
+            title: {
+                display: true,
+                text: 'PM2.5 levels for the last 12h'
+            }
+        }
     }
 }
 
