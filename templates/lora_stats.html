@@ -33,11 +33,7 @@
 </head>
 <body>
   <div class="container">
-    <div class="row">
-      <div class="col-10 mx-auto mt-5">
         <canvas id="myChart" width="400" height="200"></canvas>
-      </div>
-    </div>
   </div>
 
 <table class="center">
@@ -88,12 +84,12 @@
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
 
-var db_y = JSON.parse("{{y_val}}");
+var db_y = JSON.parse("{{pm25_list}}");
 // var db_x = JSON.parse("{{x_val}}");
 
 var xn = Array.from({length: db_y.length}, (_, i) => i + 1);
 var db_labels = [];
-{% for d in x_val %}
+{% for d in time_list %}
 db_labels.push(new Date("{{ d.isoformat }}").toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
 {% endfor %}
 
@@ -127,6 +123,7 @@ var graphData = {
         }]
     },
     options: {
+        // maintainAspectRatio: false,
         scales: {
           xAxes: [{
              type: 'time',
@@ -171,8 +168,8 @@ socket.onmessage = function(e) {
   console.log(djangoData)
 
   var newGraphData = graphData.data.datasets[0].data;
-  var pm25 = djangoData.pm25 > 100 ? 100 : djangoData.pm25;
-  newGraphData.push(pm25);
+  var pm25_new = djangoData.pm25 > 100 ? 100 : djangoData.pm25;
+  newGraphData.push(pm25_new);
 
   graphData.data.datasets[0].data = newGraphData;
 
