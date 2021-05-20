@@ -1,15 +1,10 @@
 
-export DJANGO_SETTINGS_MODULE=ds2.settings
-
-heroku config:set DJANGO_SETTINGS_MODULE=ds2.settings --app ds-realtime
-
-
 
 	post message:
 
 https://dust-sense.ew.r.appspot.com/lora/
 http://127.0.0.1:8000/lora/
-
+https://ds-realtime.herokuapp.com/lora/
 
 {"DevEUI_uplink": 
 {"Time": "2021-04-16T10:55:40.693+02:00","DevEUI": "9876B60000116CA0","FPort": 1,"FCntUp": 0,"ADRbit": 1,"MType": 4,"FCntDn": 1,"payload_hex": "0852c9680a82000100121111","mic_hex": "7ed3a99b","Lrcid": "00000201","LrrRSSI": -80.000000,"LrrSNR": 15.000000,"SpFact": 7,"SubBand": "G1","Channel": "LC1","DevLrrCnt": 1,"Lrrid": "FF017E9F","Late": 0,"LrrLAT": 60.181122,"LrrLON": 24.832340,"Lrrs": {"Lrr": [{"Lrrid": "FF017E9F","Chain": 0,"LrrRSSI": -80.000000,"LrrSNR": 15.000000,"LrrESP": -80.135208}]},"CustomerID": "100033241","CustomerData": {"alr":{"pro":"LORA/Generic","ver":"1"}},"ModelCfg": "0","DevAddr": "E0028F6F","TxPower": 14.000000,"NbTrans": 1,"Frequency": 868.1,"DynamicClass": "C"}}
