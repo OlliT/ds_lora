@@ -1,0 +1,15 @@
+
+<div>
+{% if packets %}
+    {% for p in packets %}
+        <p> Packet received: {{ p.date_received }} </p>
+        <p> PM2.5: {{ p.pm25 }} </p>
+        <p> Temperature: {{ p.temperature }} </p>
+        <p> Pressure : {{ p.pressure }} </p>
+        <p> Humidity: {{ p.humidity}} </p>
+        <br>
+    {% endfor %}
+{% else %}
+    <p>No lora packets received.</p>
+{% endif %}
+</div>

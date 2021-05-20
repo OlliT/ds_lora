@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from textwrap import wrap
 from .models import *
 import json
+from django.utils import timezone
+from datetime import timedelta
 
 def index(request):
     return render(request, 'base.html', context={'text': 'Hello World'})
@@ -44,3 +46,17 @@ def lora(request):
     else:
         print('request.method is not POST')
     return HttpResponse("OK")
+
+def lora_log(request):
+    packets = LoraPacket.objects.all().order_by('-date_received')
+    context = {"packets": packets}
+    return render(request, 'lora_log.html', context)
+
+def lora_stats(request):
+    packets = LoraPacket.objects.filter(
+        date_received__gte=timezone.now() - timedelta(hours=12)).order_by('-date_received') #[:12]
+    y = [p.pm25 if p.pm25 < 100 else 100 for p in reversed(packets)]
+    x = [(p.date_received + timedelta(hours=3)) for p in reversed(packets)]
+
+    context = {"y_val": json.dumps(y), "x_val": x}
+    return render(request, 'lora_stats.html', context)

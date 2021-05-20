@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang-"en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+    crossorigin="anonymous">
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js" >
+    </script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js">
+    </script>
+    <title>Lora 1-day stats</title>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-10 mx-auto mt-5">
+        <canvas id="myChart" width="400" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div id="stat_table">
+    <table>
+  <tr>
+    <th>Average PM2.5:</th>
+    <td id="avg"></td>
+  </tr>
+  <tr>
+    <th>Peak PM2.5 value:</th>
+    <td id="peak"></td>
+  </tr>
+</table>
+</div>
+
+</body>
+
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+
+var db_y = JSON.parse("{{y_val}}");
+// var db_x = JSON.parse("{{x_val}}");
+
+var xn = Array.from({length: db_y.length}, (_, i) => i + 1);
+var db_labels = [];
+{% for d in x_val %}
+db_labels.push(new Date("{{ d.isoformat }}").toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}));
+{% endfor %}
+
+console.log(db_labels[0])
+
+var sum = 0;
+for( var i = 0; i < db_y.length; i++ ){
+    sum += parseInt( db_y[i], 10 );
+}
+
+var pm25_avg = db_y.length == 0 ? 0 : sum/db_y.length;
+var pm25_peak = Math.max.apply(Math, db_y);
+
+window.onload = function() {
+  document.getElementById("avg").innerHTML = (Math.round(pm25_avg * 10) / 10).toString() + ' ' + "\u03BC" + "g/" + "\u33A5";
+  document.getElementById("peak").innerHTML = pm25_peak.toString() + ' ' + "\u03BC" + "g/" + "\u33A5";
+};
+
+
+var graphData = {
+    type: 'bar',
+    data: {
+        labels: db_labels,
+        datasets: [{
+            label: 'PM2.5',
+            data: db_y,
+            backgroundColor: [
+                'rgba(73, 198, 230, 0.5)',
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+          xAxes: [{
+             type: 'time',
+             time: {
+               parser: 'HH:mm',
+               format: 'HH:mm',
+               tooltipFormat: 'HH:mm',
+               unit: 'minute',
+               unitStepSize: 15,
+               displayFormats: {
+                 'minute': 'HH:mm',
+                 'hour': 'HH:mm'
+               },
+             }
+         }]
+        },
+    }
+}
+
+var myChart = new Chart(ctx, graphData);
+
+
+// var socket = new WebSocket('ws://localhost:8000/ws/graph/');
+
+var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+
+var socket = new WebSocket(
+    ws_scheme + '://' +
+    window.location.host +
+    '/ws/graph/'
+);
+
+socket.onmessage = function(e) {
+  var djangoData = JSON.parse(e.data);
+  console.log(djangoData)
+
+  var newGraphData = graphData.data.datasets[0].data;
+  var pm25 = djangoData.pm25 > 100 ? 100 : djangoData.pm25;
+  newGraphData.push(pm25);
+
+  graphData.data.datasets[0].data = newGraphData;
+
+  var newGraphLabel = graphData.data.labels;
+  var packet_d = new Date(djangoData.date_received).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+  newGraphLabel.push(packet_d);
+  graphData.data.labels =  newGraphLabel;
+
+  sum = 0;
+  for( var i = 0; i < newGraphData.length; i++ ){
+      sum += parseInt( newGraphData[i], 10 );
+  }
+
+  pm25_avg = newGraphData.length == 0 ? 0 : sum/newGraphData.length;
+  pm25_peak = Math.max.apply(Math, newGraphData);
+
+  document.getElementById("avg").innerHTML = (Math.round(pm25_avg * 10) / 10).toString() + ' ' + "\u03BC" + "g/" + "\u33A5";
+  document.getElementById("peak").innerHTML = pm25_peak.toString() + ' ' + "\u03BC" + "g/" + "\u33A5";
+
+  myChart.update();
+}
+</script>
+
+</html>

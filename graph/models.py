@@ -47,7 +47,7 @@ def update_graph(sender, instance, **kwargs):
 
     message = {
         'pm25': instance.pm25,
-        'time': instance.date_received.isoformat(),
+        'date_received': instance.date_received.isoformat(),
         'temperature': instance.temperature,
         'pressure': instance.pressure,
         'humidity': instance.humidity
