@@ -24,6 +24,11 @@
       padding: 5px;
       text-align: left;
     }
+    table.center {
+      margin-top: 15px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 </style>
 </head>
 <body>
@@ -35,8 +40,7 @@
     </div>
   </div>
 
-<p id="stat_table">
-    <table>
+<table class="center">
   <tr>
     <th>8h Average PM2.5:</th>
     <td id="avg"></td>
@@ -46,37 +50,36 @@
     <td id="peak"></td>
   </tr>
 </table>
-</p>
 
-<p id="color_key">
-  <table>
+<table class="center">
+  <tfoot><tr><td colspan="2"><small><small><small>Source: U.S. Air Quality Index for PM2.5, Rapace (2005)</small></small></small></td></tr></tfoot>
   <tr>
     <th>PM2.5 value</th>
     <th>Health Concern</th>
   </tr>
   <tr>
     <td>0 - 15</td>
-    <td> Good </td>
+    <td style="background-color: rgba(0,255,0,0.6)"> Good </td>
   </tr>
   <tr>
     <td> 15 - 40 </td>
-    <td> Moderate </td>
+    <td style="background-color: rgba(255,255,0,0.6)"> Moderate </td>
   </tr>
   <tr>
     <td> 40 - 65 </td>
-    <td> Unhealthy for sensitive groups </td>
+    <td style="background-color: rgba(255, 140, 0, 0.6)"> Unhealthy for sensitive groups </td>
   </tr>
   <tr>
     <td> 65 - 150 </td>
-    <td> Unhealthy </td>
+    <td style="background-color: rgba(255, 0, 0, 0.6)"> Unhealthy </td>
   </tr>
   <tr>
     <td> 150 - 250 </td>
-    <td> Very Unhealthy </td>
+    <td style="background-color: rgba(100, 0, 100, 0.6)"> Very unhealthy </td>
   </tr>
   <tr>
     <td> 250 - 500 </td>
-    <td> Hazarduous </td>
+    <td style="background-color: rgba(66, 13, 9, 0.6)"> Hazarduous </td>
   </tr>
 </table>
 
@@ -142,8 +145,9 @@ var graphData = {
         },
         plugins: {
             title: {
+                font: {size: 20},
                 display: true,
-                text: 'PM2.5 levels for the last 8h'
+                text: 'PM2.5 levels for the last 8h',
             }
         }
     }
