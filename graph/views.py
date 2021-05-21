@@ -55,7 +55,7 @@ def lora_log(request):
 def lora_stats(request):
     packets = LoraPacket.objects.filter(
         date_received__gte=timezone.now() - timedelta(hours=8)).order_by('-date_received') #[:12]
-    pm25_raw = [p.pm25 if p.pm25 < 100 else 100 for p in reversed(packets)]
+    pm25_raw = [p.pm25 if p.pm25 < 150 else 150 for p in reversed(packets)]
     time_raw = [p.date_received for p in reversed(packets)]
     temp_raw = [p.temperature for p in reversed(packets)]
 

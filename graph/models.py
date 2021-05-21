@@ -33,10 +33,6 @@ def send_message(event):
         message
     ))
 
-async def send_async_message():
-    channel_layer = channels.layers.get_channel_layer()
-    await channel_layer.send(json.dumps({'pm25': 17}))
-
 @receiver(post_save, sender=LoraPacket, dispatch_uid='update_graph')
 def update_graph(sender, instance, **kwargs):
     '''
@@ -54,7 +50,6 @@ def update_graph(sender, instance, **kwargs):
     }
 
     channel_layer = channels.layers.get_channel_layer()
-    send_async_message()
 
     async_to_sync(channel_layer.group_send)(
         group_name,
